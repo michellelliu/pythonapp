@@ -31,7 +31,7 @@ def setup_round():
     for picture in pictures:
         picture.image = emojis.pop()
 
-    for buttom in buttons:
+    for button in buttons:
         button.image = emojis.pop()
 
 # --------------------
@@ -40,7 +40,7 @@ def setup_round():
 
 #print (emojis)
 
-app= App("emoji match")
+app = App("emoji match")
 
 pictures_box = Box(app, layout="grid", border=True)
 buttons_box = Box(app, layout="grid", border=True)
