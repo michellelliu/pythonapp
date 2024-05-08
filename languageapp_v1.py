@@ -9,7 +9,7 @@ Version: 1
 # Imports
 # -----------------
 import os
-from guizero import App
+from guizero import App, Box, Picture, PushButton
 from random import shuffle
 
 # -----------------
@@ -36,13 +36,27 @@ shuffle(images)
 # -----------------
 # App
 # -----------------
+from guizero import system_config
+print(system_config.supported_image_types)
 
 print(images)
 
 app = App("language app")
 
 # box for images
-
+pictures_box = Box(app, layout="grid")
+pictures_box.bg = "blue"
 # box for buttons
+buttons_box = Box(app, layout="grid")
 
+# picture widgets
+pictures = []
+
+for x in range(0, 3):
+  for y in range(0, 3):
+    picture = Picture(pictures_box, grid=[x, y])
+    pictures.append(picture)
+
+    # button widgets
+    button = PushButton(buttons_box, grid=[x, y])
 app.display()
