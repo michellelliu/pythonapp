@@ -35,7 +35,11 @@ shuffle(images)
 def setup_round():
     for picture in pictures:
         picture.image = images.pop()
-        
+
+    for button in buttons:
+        buttons.pop()
+
+
 # function to match words with images
 
 # function to set up timer
@@ -71,10 +75,26 @@ for x in range(0, 3):
         #button = PushButton(buttons_box, grid=[x, y])
         #buttons.append(random_answer)
 
-button = PushButton(buttons_box, grid=[0, 0], text=random_answer)
-button = PushButton(buttons_box, grid=[0, 1], text=random_answer)
-button = PushButton(buttons_box, grid=[1, 0], text=random_answer)
-button = PushButton(buttons_box, grid=[1, 1], text=random_answer)
+button = PushButton(buttons_box,
+                    grid=[0, 0],
+                    text=buttons[0],
+                    width=12,
+                    height=2)
+button = PushButton(buttons_box,
+                    grid=[0, 1],
+                    text=buttons[1],
+                    width=12,
+                    height=2)
+button = PushButton(buttons_box,
+                    grid=[1, 0],
+                    text=buttons[2],
+                    width=12,
+                    height=2)
+button = PushButton(buttons_box,
+                    grid=[1, 1],
+                    text=buttons[3],
+                    width=12,
+                    height=2)
 
 setup_round()
 app.display()
