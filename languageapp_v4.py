@@ -16,7 +16,8 @@ from random import shuffle
 # -----------------
 # Variables
 # -----------------
-
+square_width = 7
+square_height = 4
 # setting up path to images folder to give a list of images which are then shuffled
 images_dir = "images/colours"
 images = [os.path.join(images_dir, f) for f in os.listdir(images_dir)]
@@ -59,9 +60,9 @@ def match_answers():
 app = App("language app")
 
 # box for images
-pictures_box = Box(app, layout="grid")
+pictures_box = Box(app, align="left", layout="grid")
 # box for buttons
-buttons_box = Box(app, layout="grid")
+buttons_box = Box(app, align="right", layout="grid")
 
 pictures = []
 # buttons list randomised
@@ -79,7 +80,10 @@ for x in range(0, 3):
         picture = PushButton(pictures_box, grid=[x, y])
         pictures.append(picture)
 
-        button = PushButton(buttons_box, grid=[x, y])
+        button = PushButton(buttons_box,
+                            grid=[x, y],
+                            width=square_width,
+                            height=square_height)
         buttons.append(button)
 
 text = Text(app)
