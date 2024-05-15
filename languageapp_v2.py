@@ -3,6 +3,7 @@ Title: language app
 Author: Michelle Liu
 Date: 13/05/24
 Version: 2
+this version has pictures and buttons but right now they do not function
 """
 
 # -----------------
@@ -53,11 +54,10 @@ print(images)
 app = App("language app")
 
 # box for images
-pictures_box = Box(app, layout="grid", border=True)
+pictures_box = Box(app, layout="grid")
 # box for buttons
 buttons_box = Box(app, layout="grid")
 
-# picture widgets
 pictures = []
 buttons = [
     "Rojo", "Naranja", "Amarillio", "Verde", "Azul", "Morado", "Rosa", "Negro",
