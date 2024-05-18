@@ -1,27 +1,32 @@
 """
 Title: language app
 Author: Michelle Liu
-Date: 13/05/24
-Version: 3
-In the version the buttons have spanish words text 
+Date: 16/05/24
+Version: 4
+
 """
 
 # -----------------
 # Imports
 # -----------------
 import os
-from guizero import App, Box, PushButton, Text
+from guizero import App, Box, PushButton, Window
 from random import shuffle
 
 # -----------------
 # Variables
 # -----------------
-square_width = 7
-square_height = 4
 # setting up path to images folder to give a list of images which are then shuffled
 images_dir = "images/colours"
 images = [os.path.join(images_dir, f) for f in os.listdir(images_dir)]
 shuffle(images)
+
+square_width = 7
+square_height = 4
+
+lang_choice = "english"
+data_list = []
+shuffle(data_list)
 
 # -----------------
 # Functions
@@ -37,19 +42,8 @@ def setup_round():
         picture.image = images.pop()
     # assigning each button widget with text from list
     for button in buttons:
-        button.text = buttons_random.pop()
+        button.text = data_list.pop()
 
-
-# function to match words with images
-def match_answers():
-    for x in range(0, 8):
-        if len(pictures) == len(buttons):
-            text.value = "correct"
-        else:
-            text.value = "incorrect"
-
-
-# function to set up timer
 
 # -----------------
 # App
@@ -57,8 +51,31 @@ def match_answers():
 
 #print(images)
 
-app = App("language app")
+app = App(title="language app")
+# window for picking language of app
+lang_window = Window(app, title="language")
 
+# opening text file in read mode
+with open('textfiles/' + str(lang_choice) + '_colours.txt', "r") as file:
+    #reading file
+    print(file.read())
+    data = file.read()
+    #splitting text in file into a list
+    data_list = data.split("\n")
+
+# language buttons
+spanish = PushButton(lang_window, text="Spanish")
+
+french = PushButton(lang_window, text="French")
+
+tereo = PushButton(lang_window, text="Te Reo")
+
+if spanish:
+    lang_choice = "spanish"
+elif french:
+    lang_choice = "french"
+elif tereo:
+    lang_choice = "tereo"
 # box for images
 pictures_box = Box(app, align="left", layout="grid")
 # box for buttons
@@ -67,12 +84,6 @@ buttons_box = Box(app, align="right", layout="grid")
 pictures = []
 # buttons list randomised
 buttons = []
-buttons_random = [
-    "Rojo", "Naranja", "Amarillio", "Verde", "Azul", "Morado", "Rosa", "Negro",
-    "Blanco"
-]
-shuffle(buttons_random)
-print(buttons_random)
 
 # for loop to create 9 picture and button widgets
 for x in range(0, 3):
@@ -85,7 +96,6 @@ for x in range(0, 3):
                             width=square_width,
                             height=square_height)
         buttons.append(button)
-
-text = Text(app)
+print(data_list)
 setup_round()
 app.display()
