@@ -56,12 +56,13 @@ app = App(title="language app")
 lang_window = Window(app, title="language")
 
 # opening text file in read mode
-with open('textfiles/' + str(lang_choice) + '_colours.txt', "r") as file:
-    #reading file
-    print(file.read())
-    data = file.read()
-    #splitting text in file into a list
-    data_list = data.split("\n")
+file = open('textfiles/' + str(lang_choice) + '_colours.txt', "r")
+#reading file
+data = file.read()
+#splitting text in file into a list
+data_list = data.split("\n")
+print(data_list)
+file.close()
 
 # language buttons
 spanish = PushButton(lang_window, text="Spanish")
@@ -76,6 +77,7 @@ elif french:
     lang_choice = "french"
 elif tereo:
     lang_choice = "tereo"
+
 # box for images
 pictures_box = Box(app, align="left", layout="grid")
 # box for buttons
@@ -96,6 +98,5 @@ for x in range(0, 3):
                             width=square_width,
                             height=square_height)
         buttons.append(button)
-print(data_list)
 setup_round()
 app.display()
