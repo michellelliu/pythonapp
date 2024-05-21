@@ -3,7 +3,7 @@ Title: language app
 Author: Michelle Liu
 Date: 16/05/24
 Version: 4
-
+this version has a languages window with buttons to choose which language. 
 """
 
 # -----------------
