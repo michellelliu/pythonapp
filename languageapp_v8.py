@@ -1,9 +1,10 @@
 """
 Title: language app
 Author: Michelle Liu
-Date: 25/05/24
-Version: 7
-working language window and new version of app
+Date: 27/05/24
+Version: 8
+when next button pressed the quesion changes and the colour changes
+- I'm going to change the question to english so the user has to type the answer in the chosen language.
 """
 
 # -----------------
@@ -27,6 +28,11 @@ text_files_dir = "text_files/colours"
 files_list = [
     os.path.join(text_files_dir, f) for f in os.listdir(text_files_dir)
 ]
+
+with open(files_list[0]) as file:
+    data = file.read()
+    colour_list = data.split("\n")
+    print(colour_list)
 
 # -----------------
 # Functions
@@ -60,20 +66,22 @@ def choose_lang(language):
 
 def new_word():
     #pop from word_list, return popped list value to question text
-    global word
+    colour = str(colour_list.pop())
     word = str(word_list.pop())
-    question.value = "What colour is " + word + "?"
-    term.text_color = word.lower()
-    print(word)
+    question.value = "What colour is ..."
+    term.value = word.upper()
+    term.bg = colour.lower()
+    if term.bg == "black":
+        term.text_color = "white"
+    else:
+        term.text_color = "black"
 
 
 def check_answer():
-    print(word.lower())
-
-    #if user_answer.value == answer:
-    #    print("correct!")
-    #else:
-    #    print("incorrect")
+    if user_answer == word:
+        print("correct!")
+    else:
+        print("incorrect")
 
 
 # -----------------
@@ -81,14 +89,13 @@ def check_answer():
 # -----------------
 
 # main app window
-app = App(title="language app", bg="white")
+app = App(title="language app")
 
 #https://www.youtube.com/watch?v=ZqHFn7_6RUA
-picture = Picture(app, image="images/colours/white.gif")
 question = Text(app, text="press next to start", size=20)
-term = Text(app, text=word, size=20)
+term = Text(app, text=word, size=30)
 
-check = PushButton(app, text="check", command="check_answer")
+check = PushButton(app, text="check", command=check_answer)
 
 bottom_bar = Box(app, layout="grid")
 hint = PushButton(bottom_bar, text="hint", grid=[0, 0])
