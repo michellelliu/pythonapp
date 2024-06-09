@@ -3,7 +3,8 @@ Title: language app
 Author: Michelle Liu
 Date: 06/06/24
 Version: 11
-- added score counter 
+- added score counter
+- created hint function 
 """
 # https://www.youtube.com/watch?v=FwBsPcFCO-0
 #https://tkinter.com/build-a-spanish-language-flashcard-app-python-tkinter-gui-tutorial-168/
@@ -138,6 +139,11 @@ def check_answer():
             text.value = "incorrect\n" + random_incorrect
 
 
+# function that reveals hint to user
+def hint():
+    text.value = set[random_word][0]
+
+
 # -----------------
 # App
 # -----------------
@@ -159,7 +165,9 @@ bottom_box = Box(app, align="bottom", width="fill")
 hint = PushButton(bottom_box,
                   text="hint",
                   image="images/lightbulb.gif",
-                  align="left")
+                  align="left",
+                  command=hint)
+
 next = PushButton(bottom_box,
                   text="next",
                   command=new_word,
