@@ -1,10 +1,9 @@
 """
 Title: language app
 Author: Michelle Liu
-Date: 06/06/24
-Version: 11
-- added score counter
-- created hint function
+Date: 11/06/24
+Version: 12
+
 """
 # https://www.youtube.com/watch?v=FwBsPcFCO-0
 #https://tkinter.com/build-a-spanish-language-flashcard-app-python-tkinter-gui-tutorial-168/
@@ -12,7 +11,7 @@ Version: 11
 # Imports
 # -----------------
 import os
-from guizero import App, Box, PushButton, Window, Text, TextBox
+from guizero import App, Box, PushButton, Window, Text, TextBox, Combo, Slider
 import random
 from random import randint
 
@@ -22,7 +21,7 @@ from random import randint
 lang_choice = ""
 word_list = []
 word = ""
-
+topic = "Numbers"
 score = 0
 hint_limit = 3
 # setting up path to images folder to give a list of images which are then shuffled
@@ -56,7 +55,12 @@ feedback_incorrect = [
 #function to choose which language the questions are going to be
 def choose_lang(language):
     global word_list
-    lang_window.hide()
+    #hide the language choices in lang_window
+    lang_box.hide()
+    # show the slider to choose the number of questions and change instructions text
+    app_settings.show()
+    instructions.value = "Choose a topic to learn:"
+
     lang_choice = language
     #print(str(lang_choice) + " button was pressed")
 
@@ -127,6 +131,7 @@ def check_answer():
     # print error message if user doesn't enter an answer
     if user_answer.value == "":
         text.value = "please enter a valid answer"
+        text.align = "left"
     else:
         # compare user input with answer
         if user_answer.value.lower() == set[random_word][0].lower():
@@ -165,7 +170,7 @@ hints_left = Text(top_box,
                   text="hints: " + str(hint_limit) + "/3",
                   align="right")
 
-question = Text(app, text="press arrow to start", size=20)
+question = Text(app, text="", size=20)
 term = Text(app, text=word, size=30)
 user_answer = TextBox(app, width=15)
 
@@ -187,14 +192,22 @@ check = PushButton(bottom_box, text="check", command=check_answer, width=14)
 check.text_size = 14
 text = Text(app, text="")
 
+
+def hide_window():
+    lang_window.hide()
+    new_word()
+
+
 # -----------------
 # Language Window
 # -----------------
 # window for picking language of app
-lang_window = Window(app, title="language", bg="white")
+lang_window = Window(app, title="language settings", bg="white")
 
-lang_box = Box(lang_window, layout="grid")
+instructions = Text(lang_window, text="please select a language:", size=15)
 
+##---language options---##
+lang_box = Box(lang_window, layout="grid", visible=True)
 #english box
 eng_box = Box(lang_box, grid=[0, 0])
 english = PushButton(eng_box,
@@ -229,5 +242,28 @@ tereo = PushButton(reo_box,
                    command=lambda: choose_lang("tereo"),
                    align="top")
 tereo_label = Text(reo_box, text="Te Reo", align="bottom")
+
+##--other game choice--##
+app_settings = Box(lang_window, visible=False)
+app_settings.bg = "white"
+
+set_choice = Combo(app_settings, options=["colours", "numbers"])
+
+instructions2 = Text(app_settings,
+                     text="select number of questions to revise:",
+                     size=15)
+revision_number = Slider(app_settings, start=4, end=20)
+revision_number.bg = "white"
+
+start = PushButton(app_settings,
+                   text="Start",
+                   align="right",
+                   command=hide_window)
+start.bg = "white"
+
+# -----------------
+# End Window
+# -----------------
+end_window = Window(app, title="final score", bg="white", visible=False)
 
 app.display()
