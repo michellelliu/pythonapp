@@ -3,7 +3,7 @@ Title: language app
 Author: Michelle Liu
 Date: 11/06/24
 Version: 12
-
+let user change the topic
 """
 # https://www.youtube.com/watch?v=FwBsPcFCO-0
 #https://tkinter.com/build-a-spanish-language-flashcard-app-python-tkinter-gui-tutorial-168/
@@ -21,27 +21,17 @@ from random import randint
 lang_choice = ""
 word_list = []
 word = ""
-topic = "Numbers"
+topic = "numbers"
 score = 0
 hint_limit = 3
 # setting up path to images folder to give a list of images which are then shuffled
-images_dir = "images/colours"
-images_list = [os.path.join(images_dir, f) for f in os.listdir(images_dir)]
-
-# path to text files
-text_files_dir = "text_files/colours"
-files_list = [
-    os.path.join(text_files_dir, f) for f in os.listdir(text_files_dir)
-]
-with open(files_list[0]) as file:
-    data = file.read()
-    colour_list = data.split("\n")
-    #print(colour_list)
+#images_dir = "images/colours"
+#images_list = [os.path.join(images_dir, f) for f in #os.listdir(images_dir)]
 
 # list of feedback for when user presses the check button
 feedback_correct = [
     "you are a " + lang_choice + "wiz!", "woohoo! you're on a roll",
-    "well done :)", "well done!", "you know your stuff ;)"
+    "well done :)", "well done!", "you know your stuff!"
 ]
 feedback_incorrect = [
     "better luck next time!", "we should revise this one :)",
@@ -98,6 +88,7 @@ def choose_lang(language):
 
 # function to clear board and get a new word/ go to the next question
 def new_word():
+
     #clear screen for new question
     user_answer.value = ""
     text.value = ""
@@ -111,7 +102,7 @@ def new_word():
     random_word = randint(0, word_count - 1)
 
     #create a set of questions and answers by zipping the word and colour list
-    qanda = zip(word_list, colour_list)
+    qanda = zip(word_list, question_list)
     global set
     set = list(qanda)
     #print(set)
@@ -155,6 +146,20 @@ def hint():
         text.value = "you have run out of hints"
 
 
+def change_settings():
+    global question_list
+    file = open(
+        "text_files/" + set_choice.value + "/english_" + set_choice.value +
+        ".txt", "r")
+    data = file.read()
+    # make list with the english words (these will be used for the question)
+    question_list = data.split("\n")
+    # hide the language/settings window
+    lang_window.hide()
+    # start asking user questions
+    new_word()
+
+
 # -----------------
 # App
 # -----------------
@@ -192,19 +197,15 @@ check = PushButton(bottom_box, text="check", command=check_answer, width=14)
 check.text_size = 14
 text = Text(app, text="")
 
-
-def hide_window():
-    lang_window.hide()
-    new_word()
-
-
 # -----------------
 # Language Window
 # -----------------
 # window for picking language of app
 lang_window = Window(app, title="language settings", bg="white")
 
-instructions = Text(lang_window, text="please select a language:", size=15)
+instructions = Text(lang_window,
+                    text="please select a language to revise:",
+                    size=15)
 
 ##---language options---##
 lang_box = Box(lang_window, layout="grid", visible=True)
@@ -258,7 +259,7 @@ revision_number.bg = "white"
 start = PushButton(app_settings,
                    text="Start",
                    align="right",
-                   command=hide_window)
+                   command=change_settings)
 start.bg = "white"
 
 # -----------------
