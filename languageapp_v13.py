@@ -2,7 +2,7 @@
 Title: language app
 Author: Michelle Liu
 Date: 11/06/24
-Version: 12
+Version: 13
 let user change the topic
 """
 # https://www.youtube.com/watch?v=FwBsPcFCO-0
@@ -53,21 +53,22 @@ def choose_lang(language):
     app_settings.show()
     instructions.value = "Choose a topic to learn:"
 
+    global lang_choice 
     lang_choice = language
     #print(str(lang_choice) + " button was pressed")
 
     file_path = ""
     # path for each language file
     if lang_choice == "english":
-        file_path = "text_files/" + str(set_choice.value)+ "/english_" + str(set_choice.value) + ".txt"
+        
         app.title = "English language app"
 
     if lang_choice == "spanish":
-        file_path = "text_files/" + str(set_choice.value) + "/spanish_" + str(set_choice.value) + ".txt"
+        
         app.title = "Espanol language app"
 
     if lang_choice == "french":
-        file_path = "text_files/" + str(set_choice.value)+ "/french_" + str(set_choice.value) + ".txt"
+        
         #customize app to french choice
         app.title = "language Francais app"
         app.bg = "#92ADD0"  # powder blue
@@ -78,19 +79,21 @@ def choose_lang(language):
         user_answer.bg = "#E3DBDD"  #platinum
 
     if lang_choice == "tereo":
-        file_path = "text_files/" + str(set_choice.value)+ "/tereo_" + str(set_choice.value) + ".txt"
+        
         app.title = "Te Reo language app"
-
-    #read files
-    with open(file_path) as file:
-        words = file.read()
-        word_list = words.split("\n")
 
 
 # function to clear board and get a new word/ go to the next question
 
 
 def new_word():
+    file_path = "text_files/" + str(set_choice.value)+ "/" +               lang_choice + "_" + str(set_choice.value) + ".txt"
+
+    #read files
+    with open(file_path) as file:
+        words = file.read()
+        word_list = words.split("\n")
+    
     global revision_number
     # check if answer is correct and add to score
     check_answer()
@@ -163,6 +166,7 @@ def change_settings():
     data = file.read()
     # make list with the english words (these will be used for the question)
     question_list = data.split("\n")
+        
     # hide the language/settings window
     lang_window.hide()
     # start asking user questions
