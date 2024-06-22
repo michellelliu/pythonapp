@@ -1,11 +1,9 @@
 """
 Title: language app
 Author: Michelle Liu
-Date: 18/06/24
-Version: 13
--fixed the hints and check answer for the new topics
--change app colours for the other language options
--added images for colours 
+Date: 20/06/24
+Version: 14
+added images for the other topics (fruits and numbers)
 """
 # https://www.youtube.com/watch?v=FwBsPcFCO-0
 #https://tkinter.com/build-a-spanish-language-flashcard-app-python-tkinter-gui-tutorial-168/
@@ -102,6 +100,9 @@ def choose_lang(language):
 
 # function to clear board and get a new word/ go to the next question
 def new_word():
+    # check if answer is correct and add to score (in case user forgets to click on check')
+    check_answer()
+
     # change the file path with the language choice and set choice
     file_path = "text_files/" + str(
         set_choice.value) + "/" + lang_choice + "_" + str(
@@ -112,22 +113,14 @@ def new_word():
         words = file.read()
         word_list = words.split("\n")
 
-# image_topic = set_choice.value
+    image_topic = set_choice.value
 
-# setting up path to images folder to give a list of images which are then shuffled
-#images_dir = "images/" + image_topic
+    # setting up path to images folder to give a list of images which are then shuffled
+    images_path = "images/" + image_topic
     images_list = [
-        'images/colours/red.gif', 'images/colours/orange.gif',
-        'images/colours/yellow.gif', 'images/colours/green.gif',
-        'images/colours/blue.gif', 'images/colours/purple.gif',
-        'images/colours/pink.gif', 'images/colours/black.gif',
-        'images/colours/white.gif'
+        os.path.join(images_path, file) for file in os.listdir(images_path)
+        if file.endswith('.gif')
     ]
-    print(images_list)
-
-    #global revision_number
-    # check if answer is correct and add to score
-    check_answer()
 
     #clear screen for new question
     user_answer.value = ""
@@ -138,25 +131,19 @@ def new_word():
     global random_word
     random_word = randint(0, word_count - 1)
 
-    #create a set of questions and answers by zipping the word and colour list ( index 0 = answer , index 1 = question (in english), index 2 = image)
-    qanda = zip(word_list, question_list, images_list)
+    img_set = list(zip(sorted(question_list), sorted(images_list)))
+    #print(img_set)
+    #create a set of questions and answers by zipping the word and colour list ( index 0 = question (in english), index 1 = answer
+    qanda = zip(question_list, word_list)
     global set
-    set = list(qanda)
+    set = sorted(list(qanda))
     #print(set)
 
     #change the question
     question.value = "What is ..."
-    term.value = set[random_word][1].upper()
+    term.value = set[random_word][0].upper()
     #change the image
-    picture.value = set[random_word][2]
-    #if set choice is 'colours' change the bg of the question to that colour
-    if set_choice.value == "colours":
-        term.bg = set[random_word][1].lower()
-        #change the text white if the background colour is black
-        if term.bg == "black":
-            term.text_color = "white"
-        else:
-            term.text_color = "black"
+    picture.value = img_set[random_word][1]
 
 
 # this function checks the user answer against the correct answer and increases the score when answer is correct
@@ -167,7 +154,7 @@ def check_answer():
         text.align = "left"
     else:
         # compare user input with answer
-        if user_answer.value.lower() == set[random_word][0].lower():
+        if user_answer.value.lower() == set[random_word][1].lower():
             # CORRECT - pick a random feedback in correct feedback list
             random_correct = random.choice(feedback_correct)
             text.value = "correct!\n" + random_correct
@@ -183,7 +170,7 @@ def hint():
     global set
     global hint_limit
     if hint_limit >= 1:
-        text.value = set[random_word][0]
+        text.value = set[random_word][1]
         hint_limit = hint_limit - 1
         hints_left.value = "hints left: " + str(hint_limit)
     else:

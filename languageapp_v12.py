@@ -27,7 +27,7 @@ score = 0
 hint_limit = 3
 revision_number = 10
 # setting up path to images folder to give a list of images which are then shuffled
-#images_dir = "images/colours"
+images_dir = "images/colours"
 #images_list = [os.path.join(images_dir, f) for f in #os.listdir(images_dir)]
 
 # list of feedback for when user presses the check button
