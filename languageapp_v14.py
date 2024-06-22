@@ -130,12 +130,13 @@ def new_word():
     # create random selection
     global random_word
     random_word = randint(0, word_count - 1)
-
-    img_set = list(zip(sorted(question_list), sorted(images_list)))
+    #sort image list alphabetically
+    images_list.sort()
     #print(img_set)
     #create a set of questions and answers by zipping the word and colour list ( index 0 = question (in english), index 1 = answer
     qanda = zip(question_list, word_list)
     global set
+    #sort set alphabetically
     set = sorted(list(qanda))
     #print(set)
 
@@ -143,7 +144,7 @@ def new_word():
     question.value = "What is ..."
     term.value = set[random_word][0].upper()
     #change the image
-    picture.value = img_set[random_word][1]
+    picture.value = images_list[random_word]
 
 
 # this function checks the user answer against the correct answer and increases the score when answer is correct
