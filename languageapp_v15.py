@@ -1,10 +1,10 @@
 """
 Title: language app
 Author: Michelle Liu
-Date: 20/06/24
-Version: 14
-added images for the other topics (fruits and numbers)
-fixed problem with questions, answers and images not matching
+Date: 22/06/24
+Version: 15
+-changed 'hint' name to 'hint_button' to avoid confusion with the function that is also named 'hint'
+- end screen working - lets use play again
 """
 # https://www.youtube.com/watch?v=FwBsPcFCO-0
 #https://tkinter.com/build-a-spanish-language-flashcard-app-python-tkinter-gui-tutorial-168/
@@ -24,9 +24,9 @@ lang_choice = ""
 word_list = []
 word = ""
 topic = "numbers"
-score = 0
+user_score = 0
 hint_limit = 3
-
+question_counter = 0
 # list of feedback for when user presses the check button
 feedback_correct = [
     "you are a " + lang_choice + "wiz!", "woohoo! you're on a roll",
@@ -53,7 +53,6 @@ def choose_lang(language):
     global lang_choice
     lang_choice = language
 
-    file_path = ""
     # path for each language file
     if lang_choice == "english":
         #customize app colours to english choice
@@ -61,7 +60,7 @@ def choose_lang(language):
         app.bg = "#FFFFFF"  # white
         check.bg = "#A50C17"  # cornell red
         check.text_color = "#FFFFFF"  # white
-        hint.bg = "#1F4275"  # yale blue
+        hint_button.bg = "#1F4275"  # yale blue
         next.bg = "#1F4275"  # yale blue
         user_answer.bg = user_answer.bg = "#FFFFFF"  # white
 
@@ -70,7 +69,7 @@ def choose_lang(language):
         app.title = "Espanol language app"
         app.bg = "#fec700"  # mikado yellow
         check.bg = "#B11100"  # turkey red
-        hint.bg = "#F0E7DE"  #linen
+        hint_button.bg = "#F0E7DE"  #linen
         next.bg = "#F0E7DE"  #linen
         user_answer.bg = "#FFFFFF"  #white
 
@@ -79,7 +78,7 @@ def choose_lang(language):
         app.title = "language Francais app"
         app.bg = "#92ADD0"  # powder blue
         check.bg = "#335192"  #YInMn bue
-        hint.bg = "#FBF8F3"
+        hint_button.bg = "#FBF8F3"
         next.bg = "#FBF8F3"
         user_answer.bg = "#E3DBDD"  #platinum
 
@@ -89,7 +88,7 @@ def choose_lang(language):
         app.bg = "#FFFFFF"  # white
         check.bg = "#000000"  #black
         check.text_color = "#FFFFFF"  # white
-        hint.bg = "#E63945"  # red (pantone)
+        hint_button.bg = "#E63945"  # red (pantone)
         next.bg = "#E63945"  # red (pantone)
         user_answer.bg = user_answer.bg = "#FFFFFF"  #white
 
@@ -99,10 +98,39 @@ def choose_lang(language):
     start.bg = "#FFFFFF"  #white
 
 
+def change_settings():
+    global question_list
+    #read chosen language text file
+    file = open(
+        "text_files/" + set_choice.value + "/english_" + set_choice.value +
+        ".txt", "r")
+    data = file.read()
+    # make list with the english words (these will be used for the question)
+    question_list = data.split("\n")
+
+    # hide the language/settings window
+    lang_window.hide()
+    # start asking user questions
+    new_word()
+
+
 # function to clear board and get a new word/ go to the next question
 def new_word():
-    # check if answer is correct and add to score (in case user forgets to click on check')
+    # count the amount of times this function is called
+    global question_counter
+    question_counter += 1
+    #limit the number of questions from the user's choice with the question counter
+    if question_counter == revision_number.value + 1:
+        lang_window.hide()
+        end_window.visible = True
+    #print("function called " + str(question_counter) + " times")
+
+    # call check_answer to check if answer is correct (in case user forgets to click on check')
     check_answer()
+
+    #clear screen for new question
+    user_answer.value = ""
+    text.value = ""
 
     # change the file path with the language choice and set choice
     file_path = "text_files/" + str(
@@ -123,9 +151,6 @@ def new_word():
         if file.endswith('.gif')
     ]
 
-    #clear screen for new question
-    user_answer.value = ""
-    text.value = ""
     # get len of word list
     word_count = len(word_list)
     # create random selection
@@ -150,21 +175,22 @@ def new_word():
 
 # this function checks the user answer against the correct answer and increases the score when answer is correct
 def check_answer():
+    global user_score
     # print error message if user doesn't enter an answer
     if user_answer.value == "":
         text.value = "please enter a valid answer"
-        text.align = "left"
     else:
         # compare user input with answer
         if user_answer.value.lower() == set[random_word][1].lower():
             # CORRECT - pick a random feedback in correct feedback list
             random_correct = random.choice(feedback_correct)
             text.value = "correct!\n" + random_correct
-            score.value = int(score.value) + 1
+            score.value = str(int(user_score) + 1)
         else:
             #  INCORRECT- pick a random feedback in incorrect feedback list
             random_incorrect = random.choice(feedback_incorrect)
-            text.value = "incorrect\n" + random_incorrect
+            text.value = "incorrect - the correct answer was " + set[
+                random_word][1] + "\n" + random_incorrect
 
 
 # function that reveals hint to user
@@ -179,20 +205,19 @@ def hint():
         text.value = "you have run out of hints"
 
 
-def change_settings():
-    global question_list
-    #read chosen language text file
-    file = open(
-        "text_files/" + set_choice.value + "/english_" + set_choice.value +
-        ".txt", "r")
-    data = file.read()
-    # make list with the english words (these will be used for the question)
-    question_list = data.split("\n")
+def end_game():
+    global question_counter
+    if question_counter == revision_number.value:
+        lang_window.hide()
+        end_window.visible = True
 
-    # hide the language/settings window
-    lang_window.hide()
-    # start asking user questions
-    new_word()
+
+def replay():
+    end_window.hide()
+    lang_window.show()
+    lang_box.show()
+    app_settings.hide()
+    instructions.value = "please select a language to revise:"
 
 
 # -----------------
@@ -205,7 +230,7 @@ app = App(title="language app", width=400)
 #https://www.youtube.com/watch?v=ZqHFn7_6RUA
 top_box = Box(app, align="top", width="fill")
 score_text = Text(top_box, align="left", text="score: ")
-score = Text(top_box, text="0", align="left")
+score = Text(top_box, text=str(user_score), align="left")
 hints_left = Text(top_box,
                   text="hints left: " + str(hint_limit),
                   align="right")
@@ -217,11 +242,11 @@ user_answer = TextBox(app, width=15)
 
 bottom_box = Box(app, align="bottom", width="fill")
 
-hint = PushButton(bottom_box,
-                  text="hint",
-                  image="images/lightbulb.gif",
-                  align="left",
-                  command=hint)
+hint_button = PushButton(bottom_box,
+                         text="hint",
+                         image="images/lightbulb.gif",
+                         align="left",
+                         command=hint)
 
 next = PushButton(bottom_box,
                   text="next",
@@ -299,5 +324,6 @@ start = PushButton(app_settings,
 # End Window
 # -----------------
 end_window = Window(app, title="final score", bg="white", visible=False)
-
+end_text = Text(end_window, text="Final Score: " + str(user_score), size=20)
+play_again = PushButton(end_window, text="Play Again?", command=replay)
 app.display()
