@@ -175,7 +175,6 @@ def new_word():
 
 # this function checks the user answer against the correct answer and increases the score when answer is correct
 def check_answer():
-    global user_score
     # print error message if user doesn't enter an answer
     if user_answer.value == "":
         text.value = "please enter a valid answer"
@@ -185,7 +184,8 @@ def check_answer():
             # CORRECT - pick a random feedback in correct feedback list
             random_correct = random.choice(feedback_correct)
             text.value = "correct!\n" + random_correct
-            score.value = str(int(user_score) + 1)
+            # update score
+            score.value = int(add_point())
         else:
             #  INCORRECT- pick a random feedback in incorrect feedback list
             random_incorrect = random.choice(feedback_incorrect)
@@ -213,11 +213,21 @@ def end_game():
 
 
 def replay():
+    global user_score
+    global hints_limit
     end_window.hide()
     lang_window.show()
     lang_box.show()
     app_settings.hide()
     instructions.value = "please select a language to revise:"
+    user_score = 0
+    hints_limit = 3
+
+
+def add_point():
+    global user_score
+    user_score += 1
+    return user_score
 
 
 # -----------------
@@ -324,6 +334,7 @@ start = PushButton(app_settings,
 # End Window
 # -----------------
 end_window = Window(app, title="final score", bg="white", visible=False)
-end_text = Text(end_window, text="Final Score: " + str(user_score), size=20)
+end_text = Text(end_window, text="Final Score: " + str(user_score))
 play_again = PushButton(end_window, text="Play Again?", command=replay)
+
 app.display()
