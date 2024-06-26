@@ -1,10 +1,9 @@
 """
 Title: language app
 Author: Michelle Liu
-Date: 22/06/24
-Version: 15
--changed 'hint' name to 'hint_button' to avoid confusion with the function that is also named 'hint'
-- end screen working - lets use play again
+Date: 25/06/24
+Version: 16
+
 """
 # https://www.youtube.com/watch?v=FwBsPcFCO-0
 #https://tkinter.com/build-a-spanish-language-flashcard-app-python-tkinter-gui-tutorial-168/
@@ -99,6 +98,7 @@ def choose_lang(language):
 
 
 def change_settings():
+    app.show()
     global question_list
     #read chosen language text file
     file = open(
@@ -119,14 +119,13 @@ def new_word():
     # count the amount of times this function is called
     global question_counter
     question_counter += 1
-    #limit the number of questions from the user's choice with the question counter
+    #end the game when question counter reachers the user's slelected revison number
     if question_counter == revision_number.value + 1:
-        lang_window.hide()
-        end_window.visible = True
+        end_game()
     #print("function called " + str(question_counter) + " times")
 
     # call check_answer to check if answer is correct (in case user forgets to click on check')
-    check_answer()
+    #check_answer()
 
     #clear screen for new question
     user_answer.value = ""
@@ -184,9 +183,9 @@ def check_answer():
             # CORRECT - pick a random feedback in correct feedback list
             random_correct = random.choice(feedback_correct)
             text.value = "correct!\n" + random_correct
-            # update score
-            score.value = int(add_point())
-            print(user_score)
+            add_point()  # update score
+            score.value = str(user_score)  # update score on app display
+            #print(user_score)
 
         else:
             #  INCORRECT- pick a random feedback in incorrect feedback list
@@ -208,28 +207,31 @@ def hint():
 
 
 def end_game():
-    global question_counter
-    if question_counter == revision_number.value:
-        lang_window.hide()
-        end_window.visible = True
+    #hide app and show end window
+    app.hide()
+    lang_window.hide()
+    end_window.visible = True
+    # update the end score when end_game is called
+    end_text.value = "Final Score: " + str(user_score)
 
 
 def replay():
     global user_score
     global hints_limit
+    #reset app and other elements
+    user_score = 0
+    hints_limit = 3
+    instructions.value = "please select a language to revise:"
+    # show appropriate windows
     end_window.hide()
     lang_window.show()
     lang_box.show()
     app_settings.hide()
-    instructions.value = "please select a language to revise:"
-    user_score = 0
-    hints_limit = 3
 
 
 def add_point():
     global user_score
     user_score += 1
-    return user_score
 
 
 # -----------------
@@ -237,7 +239,7 @@ def add_point():
 # -----------------
 
 # main app window
-app = App(title="language app", width=400)
+app = App(title="language app", width=400, visible=False)
 
 #https://www.youtube.com/watch?v=ZqHFn7_6RUA
 top_box = Box(app, align="top", width="fill")
