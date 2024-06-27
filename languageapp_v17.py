@@ -4,6 +4,7 @@ Author: Michelle Liu
 Date: 25/06/24
 Version: 16
 fixed the score appearing on the end screen
+added a has_scored boolean variabe to ensure that users can't cheat by getting multiple points frok pressing the check button more than twice.
 """
 # https://www.youtube.com/watch?v=FwBsPcFCO-0
 #https://tkinter.com/build-a-spanish-language-flashcard-app-python-tkinter-gui-tutorial-168/
@@ -26,6 +27,8 @@ topic = "numbers"
 user_score = 0
 hint_limit = 3
 question_counter = 0
+has_scored = False
+
 # list of feedback for when user presses the check button
 feedback_correct = [
     "you are a " + lang_choice + "wiz!", "woohoo! you're on a roll",
@@ -116,6 +119,8 @@ def change_settings():
 
 # function to clear board and get a new word/ go to the next question
 def new_word():
+    global has_scored
+    has_scored = False
     # count the amount of times this function is called
     global question_counter
     question_counter += 1
@@ -123,9 +128,6 @@ def new_word():
     if question_counter == revision_number.value + 1:
         end_game()
     #print("function called " + str(question_counter) + " times")
-
-    # call check_answer to check if answer is correct (in case user forgets to click on check')
-    #check_answer()
 
     #clear screen for new question
     user_answer.value = ""
@@ -149,7 +151,6 @@ def new_word():
         os.path.join(images_path, file) for file in os.listdir(images_path)
         if file.endswith('.gif')
     ]
-
     # get len of word list
     word_count = len(word_list)
     # create random selection
@@ -174,18 +175,22 @@ def new_word():
 
 # this function checks the user answer against the correct answer and increases the score when answer is correct
 def check_answer():
+    global has_scored
     # print error message if user doesn't enter an answer
     if user_answer.value == "":
         text.value = "please enter a valid answer"
+
     else:
         # compare user input with answer
         if user_answer.value.lower() == set[random_word][1].lower():
             # CORRECT - pick a random feedback in correct feedback list
             random_correct = random.choice(feedback_correct)
             text.value = "correct!\n" + random_correct
-            add_point()  # update score
-            score.value = str(user_score)  # update score on app display
-            #print(user_score)
+            if not has_scored:
+                add_point()  # update score
+                score.value = str(user_score)  # update score on app display
+                #print(user_score)
+                has_scored = True
 
         else:
             #  INCORRECT- pick a random feedback in incorrect feedback list
@@ -328,7 +333,7 @@ set_choice = Combo(app_settings, options=["colours", "numbers", "fruits"])
 instructions2 = Text(app_settings,
                      text="select number of questions to revise:",
                      size=15)
-revision_number = Slider(app_settings, start=5, end=20)
+revision_number = Slider(app_settings, start=5, end=10)
 
 start = PushButton(app_settings,
                    text="Start",
