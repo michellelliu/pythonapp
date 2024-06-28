@@ -253,6 +253,11 @@ def add_point():
     user_score += 1
 
 
+def enter_pressed(event):
+    if event.key == "\r" or event.key == "\n":
+        check_answer()
+
+
 # -----------------
 # App
 # -----------------
@@ -272,6 +277,7 @@ question = Text(app, text="", size=20)
 term = Text(app, text=word, size=30)
 picture = Picture(app)
 user_answer = TextBox(app, width=15)
+user_answer.when_key_pressed = enter_pressed
 
 bottom_box = Box(app, align="bottom", width="fill")
 
