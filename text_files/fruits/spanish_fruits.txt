@@ -1,11 +1,11 @@
 Manzana
 Naranja
-Platano
-Limon
-Sandia
+Plátano
+Limón
+Sandía
 Uvas
 Mango
 Fresa
-Arandanos
-Pina
+Arándanos
+Piña
 Pera

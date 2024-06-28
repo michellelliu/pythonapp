@@ -1,8 +1,8 @@
 Pomme
 Orange
-Banan
+Banane
 Citron
-Pasteque
+Pastèque
 Raisin
 Mangue
 Fraise

@@ -5,7 +5,7 @@ Lemon
 Watermelon
 Grapes
 Mango
-Strawberries
+Strawberry
 Blueberries
 Pineapple
 Pear

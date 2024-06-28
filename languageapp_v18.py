@@ -1,10 +1,12 @@
 """
 Title: language app
 Author: Michelle Liu
-Date: 25/06/24
-Version: 17
-fixed the score appearing on the end screen
-added a has_scored boolean variabe to ensure that users can't cheat by getting multiple points frok pressing the check button more than twice.
+Date: 27/06/24
+Version: 18
+-put questions and answers in variable to make it easier to update in the future
+-changed 'te reo' title text to 'te reo maori'
+-swapped the questions and answers around so the questions are in maori/spanish/french and the user answers in english and updated images to this change
+
 """
 # https://www.youtube.com/watch?v=FwBsPcFCO-0
 #https://tkinter.com/build-a-spanish-language-flashcard-app-python-tkinter-gui-tutorial-168/
@@ -48,6 +50,7 @@ def choose_lang(language):
     global word_list
     #hide the language choices in lang_window
     lang_box.hide()
+    notice_box.hide()
     # show the slider to choose the number of questions and change instructions text
     app_settings.show()
     instructions.value = "Choose a topic to learn:"
@@ -85,8 +88,8 @@ def choose_lang(language):
         user_answer.bg = "#E3DBDD"  #platinum
 
     if lang_choice == "tereo":
-        #customize app colours to te reo choice
-        app.title = "Te Reo language app"
+        #customize app colours to maori choice
+        app.title = "Māori language app"
         app.bg = "#FFFFFF"  # white
         check.bg = "#000000"  #black
         check.text_color = "#FFFFFF"  # white
@@ -143,6 +146,37 @@ def new_word():
         words = file.read()
         word_list = words.split("\n")
 
+    # get len of word list
+    word_count = len(word_list)
+    # create random selection
+    global random_word
+    random_word = randint(0, word_count - 1)
+
+    #create a set of questions and answers by zipping the word and colour list ( index 0 = question (in english), index 1 = answer
+    qanda = zip(question_list, word_list)
+    global set
+    #sort set alphabetically
+    set = sorted(list(qanda))
+    #print(set)
+
+    global set_question, set_answer
+    # variable for questions in set (language word)
+    set_question = set[random_word][1].upper()
+    #variable for answers in set (english)
+    set_answer = set[random_word][0].lower()
+
+    #change the question
+    question.value = "What is ..."
+    term.value = set_question
+    #change the image
+    image_topic = set_choice.value
+    picture.value = (f"images/topics/{image_topic}.gif")
+
+
+# this function checks the user answer against the correct answer and increases the score when answer is correct
+def check_answer():
+    global has_scored
+    global image_topic
     image_topic = set_choice.value
 
     # setting up path to images folder to give a list of images which are then shuffled
@@ -151,41 +185,20 @@ def new_word():
         os.path.join(images_path, file) for file in os.listdir(images_path)
         if file.endswith('.gif')
     ]
-    # get len of word list
-    word_count = len(word_list)
-    # create random selection
-    global random_word
-    random_word = randint(0, word_count - 1)
     #sort image list alphabetically
     images_list.sort()
-    #print(img_set)
-    #create a set of questions and answers by zipping the word and colour list ( index 0 = question (in english), index 1 = answer
-    qanda = zip(question_list, word_list)
-    global set
-    #sort set alphabetically
-    set = sorted(list(qanda))
-    #print(set)
-
-    #change the question
-    question.value = "What is ..."
-    term.value = set[random_word][0].upper()
-    #change the image
-    picture.value = images_list[random_word]
-
-
-# this function checks the user answer against the correct answer and increases the score when answer is correct
-def check_answer():
-    global has_scored
     # print error message if user doesn't enter an answer
     if user_answer.value == "":
         text.value = "please enter a valid answer"
 
     else:
         # compare user input with answer
-        if user_answer.value.lower() == set[random_word][1].lower():
+        if user_answer.value.lower() == set_answer:
             # CORRECT - pick a random feedback in correct feedback list
             random_correct = random.choice(feedback_correct)
             text.value = "correct!\n" + random_correct
+            #change the image
+            picture.value = images_list[random_word]
             if not has_scored:
                 add_point()  # update score
                 score.value = str(user_score)  # update score on app display
@@ -195,8 +208,9 @@ def check_answer():
         else:
             #  INCORRECT- pick a random feedback in incorrect feedback list
             random_incorrect = random.choice(feedback_incorrect)
-            text.value = "incorrect - the correct answer was " + set[
-                random_word][1] + "\n" + random_incorrect
+            text.value = "incorrect - the correct answer was " + set_answer + "\n" + random_incorrect
+        #change the image
+        picture.value = images_list[random_word]
 
 
 # function that reveals hint to user
@@ -204,7 +218,7 @@ def hint():
     global set
     global hint_limit
     if hint_limit >= 1:
-        text.value = set[random_word][1]
+        text.value = set_answer
         hint_limit = hint_limit - 1
         hints_left.value = "hints left: " + str(hint_limit)
     else:
@@ -318,11 +332,15 @@ french_label = Text(fre_box, text="French", align="bottom")
 # maori box
 reo_box = Box(lang_box, grid=[1, 1])
 tereo = PushButton(reo_box,
-                   text="Te Reo",
+                   text="Te Reo Māori",
                    image="images/language/maori.gif",
                    command=lambda: choose_lang("tereo"),
                    align="top")
-tereo_label = Text(reo_box, text="Te Reo", align="bottom")
+tereo_label = Text(reo_box, text="Te Reo Māori", align="bottom")
+notice_box = Box(lang_window)
+spacer = Picture(notice_box)
+notice = Text(notice_box, text="put in fullscreen for best experience")
+notice.text_color = "red"
 
 ##--other app settings--##
 app_settings = Box(lang_window, visible=False)

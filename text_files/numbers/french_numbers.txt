@@ -1,5 +1,5 @@
-Zero
-Un
+Zéro
+Un/Une
 Deux
 Trois
 Quatre
@@ -7,5 +7,5 @@ Cinq
 Six
 Sept
 Huit
-Neuf
+Neuf/Nueve
 Dix

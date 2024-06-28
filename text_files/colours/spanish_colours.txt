@@ -1,9 +1,9 @@
-Rojo
+Rojo/Roja
 Naranja
 Amarillo
 Verde
 Azul
 Morado
 Rosa
-Negro
-Blanco
+Negro/Negra
+Blanco/Blanca
